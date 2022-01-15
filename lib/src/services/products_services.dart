@@ -35,6 +35,8 @@ class ProductsService extends ChangeNotifier{
     final res = await http.get(Uri.parse(_baseURl));
     final model = Products.fromJson(res.body);
     productos = [...model.productos];
+    getNoProducts();
+    getSiProducts();
     notifyListeners();
   }
   Future getNoProducts() async{

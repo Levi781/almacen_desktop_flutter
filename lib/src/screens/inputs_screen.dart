@@ -10,27 +10,15 @@ class InputsScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final inputsService = Provider.of<InputOutputsServices>(context);
+    final productsService = Provider.of<ProductsService>(context);
 
     return Scaffold(
       body: Column(
         children: [
           Container(
             width: double.infinity,
-            height: 100,
-            child: Row(
-              children: [
-                CustomButton(
-                  titulo: 'Agregar entrada',
-                  color: Colors.blue,
-                  onPressed: (){},
-                ),
-                CustomButton(
-                  titulo: 'Agregar salida',
-                  color: Colors.blue,
-                  onPressed: (){},
-                ),
-              ],
-            ),
+            height: 25,
+           
           ),
           Expanded(
             child: ListView.builder(
@@ -88,6 +76,7 @@ class InputsScreen extends StatelessWidget {
                               ),
                               child: TextButton(onPressed: ()async{
                                   await inputsService.putRegisterInput( input.id, input.idu.id, input.idp.id);
+                                  await productsService.getProducts();
                                 }, child: const Text('Entregar', style: TextStyle(fontWeight: FontWeight.bold,))),
                             )
                             : const Text('Sin pendiente', style: TextStyle(color: Colors.green, fontWeight: FontWeight.bold,)),

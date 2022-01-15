@@ -8,7 +8,9 @@ import 'package:almacen_app_flutter/src/screens/preview_report_not_screen.dart';
 import 'package:almacen_app_flutter/src/screens/preview_report_screen.dart';
 import 'package:almacen_app_flutter/src/screens/users_screen.dart';
 import 'package:almacen_app_flutter/src/services/auth_services.dart';
+import 'package:almacen_app_flutter/src/services/products_services.dart';
 import 'package:flutter/material.dart';
+import 'package:pie_chart/pie_chart.dart';
 import 'package:provider/provider.dart';
 import 'package:almacen_app_flutter/src/screens/screens.dart';
 import 'package:almacen_app_flutter/src/widgets/widgets.dart';
@@ -160,6 +162,8 @@ class HomeScreen extends StatelessWidget {
       ),
     );
   }
+
+  
 }
 
 

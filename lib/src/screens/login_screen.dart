@@ -50,7 +50,7 @@ class LoginScreen extends StatelessWidget {
                   icon: Icons.lock,
                   labelText: 'Credenciales',
                   controller: passwordController,
-                  isPasswd: false,
+                  isPasswd: true,
                 ),
       
                 CustomButton(
