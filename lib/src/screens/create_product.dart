@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:almacen_app_flutter/src/models/products.dart';
 import 'package:almacen_app_flutter/src/providers/providers.dart';
 import 'package:almacen_app_flutter/src/screens/screens.dart';
@@ -7,15 +9,25 @@ import 'package:almacen_app_flutter/src/widgets/custom_button.dart';
 import 'package:almacen_app_flutter/src/widgets/custom_combobox.dart';
 import 'package:almacen_app_flutter/src/widgets/custom_input.dart';
 import 'package:almacen_app_flutter/src/widgets/custom_switchbox.dart';
+import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-class CreateProduct extends StatelessWidget {
+class CreateProduct extends StatefulWidget {
   CreateProduct({Key? key}) : super(key: key);
 
+  @override
+  State<CreateProduct> createState() => _CreateProductState();
+}
+
+class _CreateProductState extends State<CreateProduct> {
   final pruductName = TextEditingController();
+
   final pruductSerie = TextEditingController();
+
   final pruductDesc = TextEditingController();
+
+  File? picture;
 
   @override
   Widget build(BuildContext context) {
@@ -79,7 +91,7 @@ class CreateProduct extends StatelessWidget {
                           serie: pruductSerie.text
                         );
                         
-                        final res = await productService.putProduct( newproduct );
+                        final res = await productService.putProduct( newproduct, picture );
                         if(res){
                             pruductName.text = '';
                             pruductDesc.text = '';
@@ -89,6 +101,7 @@ class CreateProduct extends StatelessWidget {
                                 title: Text('Producto actualizado correctamente'),
                               );
                             });
+                            await productService.getProducts();
                           }else{
                             showDialog(context: context, builder: (context){
                               return const AlertDialog(
@@ -107,7 +120,7 @@ class CreateProduct extends StatelessWidget {
                           serie: pruductSerie.text
                         );
 
-                        final res = await productService.postProduct(newproduct);
+                        final res = await productService.postProduct(newproduct, picture );
 
                         if(res){
                           pruductName.text = '';
@@ -118,6 +131,7 @@ class CreateProduct extends StatelessWidget {
                               title: Text('Producto almacenado correctamente'),
                             );
                           });
+                          await productService.getProducts();
                         }else{
                           showDialog(context: context, builder: (context){
                             return const AlertDialog(
@@ -126,9 +140,6 @@ class CreateProduct extends StatelessWidget {
                           });
                         }
                       }
-
-
-
                     },
                     titulo: 'Almacenar', 
                     color: Colors.deepOrange
@@ -143,14 +154,20 @@ class CreateProduct extends StatelessWidget {
                 child: ListView(
                   padding: const EdgeInsets.only(top: 150),
                   children: [
-                    const Image(
-                      image: AssetImage('assets/uquifa.png'),
-                      fit: BoxFit.cover,
-                    ),
+                    setImageView(),
                     Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 200.0),
-                      child: CustomButton(onPressed: (){
-                        //TODO: Examinar para ver las fotos o imagenes
+                      child: CustomButton(onPressed: ()async{
+                        FilePickerResult? result = await FilePicker.platform.pickFiles();
+                        if (result != null) {
+                          File file = File(result.files.single.path!);
+                          picture = file;
+                          print(picture!.path);
+                          setState(() {
+        
+                          });
+                        }
+
                       }, titulo: 'Seleccionar imagen', color: Colors.red.shade300),
                     )
                   ],
@@ -161,5 +178,13 @@ class CreateProduct extends StatelessWidget {
         ),
       )
     );
+  }
+
+  Widget setImageView(){
+    if( picture != null ){
+      //Mostrar la imagen
+      return Image.file(picture!, width: 250, height: 250,);
+    }
+    return Image.asset('assets/uquifa.png');
   }
 }

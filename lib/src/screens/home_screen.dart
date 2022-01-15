@@ -1,6 +1,11 @@
+import 'package:almacen_app_flutter/src/screens/activate_users_screen.dart';
 import 'package:almacen_app_flutter/src/screens/create_category.dart';
 import 'package:almacen_app_flutter/src/screens/create_product.dart';
 import 'package:almacen_app_flutter/src/screens/details_product.dart';
+import 'package:almacen_app_flutter/src/screens/preview_all_screen.dart';
+import 'package:almacen_app_flutter/src/screens/preview_avaliable_screen.dart';
+import 'package:almacen_app_flutter/src/screens/preview_report_not_screen.dart';
+import 'package:almacen_app_flutter/src/screens/preview_report_screen.dart';
 import 'package:almacen_app_flutter/src/screens/users_screen.dart';
 import 'package:almacen_app_flutter/src/services/auth_services.dart';
 import 'package:flutter/material.dart';
@@ -96,6 +101,17 @@ class HomeScreen extends StatelessWidget {
                       navegationModel.paginaActual = 6;
                     }, 
                   ),
+                  if(authServices.user.role == 'ADMIN_ROLE')
+                  CustomItem(
+                    label: 'Activar cuentas', 
+                    color: Colors.white,
+                    backcolor: Colors.deepPurple,
+                    icon: Icons.account_circle_rounded,
+                    onPressed: (){
+                      //final navegationModel = Provider.of<NavegacionModel>(context, listen: false);
+                      navegationModel.paginaActual = 10;
+                    }, 
+                  ),
                   const Spacer(),
                   CustomItem(
                     label: 'Cerrar sesión', 
@@ -128,7 +144,14 @@ class HomeScreen extends StatelessWidget {
                   CreateProduct(),// 5
                   const UsersScreen(), // 6
                   CreateCategoryScreen(),// 7
-                  CreateUsersScreen()//8
+                  CreateUsersScreen(),//8
+                  const PreviewReportScreen(), //9
+                  const ActivateUsersScreen(), //10
+                  const PreviewAllScreen(),// 11
+                  const PreviewReportNotScreen(), //12
+                  const PreviewReportAvailableScreen(), //13
+                  
+
                 ],
               )
             )

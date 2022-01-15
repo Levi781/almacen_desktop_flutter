@@ -73,6 +73,7 @@ class Idp {
         required this.category,
         required this.description,
         required this.disponible,
+        this.img
     });
 
     String id;
@@ -82,6 +83,7 @@ class Idp {
     String category;
     String description;
     bool disponible;
+    String? img;
 
     factory Idp.fromJson(String str) => Idp.fromMap(json.decode(str));
 
@@ -95,6 +97,7 @@ class Idp {
         category: json["category"],
         description: json["description"],
         disponible: json["disponible"],
+        img: json["img"],
     );
 
     Map<String, dynamic> toMap() => {
@@ -105,6 +108,7 @@ class Idp {
         "category": category,
         "description": description,
         "disponible": disponible,
+        "img": img,
     };
 }
 

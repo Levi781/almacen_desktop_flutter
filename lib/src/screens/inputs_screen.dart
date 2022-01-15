@@ -1,3 +1,4 @@
+import 'package:almacen_app_flutter/src/screens/screens.dart';
 import 'package:almacen_app_flutter/src/services/services.dart';
 import 'package:almacen_app_flutter/src/widgets/widgets.dart';
 import 'package:flutter/material.dart';
@@ -76,17 +77,34 @@ class InputsScreen extends StatelessWidget {
                           ],
                         ),
                         
-                        input.entrada == ''
-                        ? Container(
-                          decoration: BoxDecoration(
-                            color: Colors.white70,
-                            borderRadius: BorderRadius.circular(15)
-                          ),
-                          child: TextButton(onPressed: ()async{
-                              await inputsService.putRegisterInput( input.id, input.idu.id, input.idp.id);
-                            }, child: const Text('Entregar', style: TextStyle(fontWeight: FontWeight.bold,))),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            input.entrada == ''
+                            ? Container(
+                              decoration: BoxDecoration(
+                                color: Colors.white70,
+                                borderRadius: BorderRadius.circular(15)
+                              ),
+                              child: TextButton(onPressed: ()async{
+                                  await inputsService.putRegisterInput( input.id, input.idu.id, input.idp.id);
+                                }, child: const Text('Entregar', style: TextStyle(fontWeight: FontWeight.bold,))),
+                            )
+                            : const Text('Sin pendiente', style: TextStyle(color: Colors.green, fontWeight: FontWeight.bold,)),
+
+                            Container(
+                              decoration: BoxDecoration(
+                                color: Colors.red.shade300,
+                                borderRadius: BorderRadius.circular(15)
+                              ),
+                              child: TextButton(onPressed: ()async{
+                                  inputsService.currentResult = input;
+                                  final navegationModel = Provider.of<NavegacionModel>(context, listen: false);
+                                  navegationModel.paginaActual = 9;
+                                }, child: const Text('Reporte', style: TextStyle(fontWeight: FontWeight.bold, color: Colors.white))),
+                            )
+                          ],
                         )
-                        : const Text('Sin pendiente', style: TextStyle(color: Colors.green, fontWeight: FontWeight.bold,))
                         
                       ],
                     ),

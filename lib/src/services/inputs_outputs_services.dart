@@ -2,6 +2,7 @@
 import 'dart:convert';
 
 import 'package:almacen_app_flutter/src/models/inputs_outputs.dart';
+import 'package:almacen_app_flutter/src/models/products.dart';
 import 'package:almacen_app_flutter/src/utils/utils.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
@@ -10,6 +11,17 @@ class InputOutputsServices extends ChangeNotifier{
 
   final _baseURL = baseURL+'inputs';
   List<Result> inputsOutputs = [];
+  List<Result> notinputs = [];
+  List<Result> avaliable = [];
+
+  Result currentResult = Result(
+    id: '', 
+    idu: Idu(id: '', nombre: '', apellidos: '', depto:'', puesto: '', estado: false, v: 0), 
+    idp: Idp(id: '', name: '', user: '', serie: '', category: '', description: '', disponible: false), 
+    salida: DateTime.now(), 
+    entrada: '', 
+    v: 0
+  );
 
   InputOutputsServices(){
     getAllInputsOutputs();
@@ -20,6 +32,7 @@ class InputOutputsServices extends ChangeNotifier{
     final res = await http.get(Uri.parse(_baseURL));
     final data = InputsOutputs.fromJson( res.body );
     inputsOutputs = [...data.results];
+    currentResult = inputsOutputs[0];
     notifyListeners();
   }
 

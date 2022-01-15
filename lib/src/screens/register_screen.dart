@@ -1,5 +1,7 @@
+import 'package:almacen_app_flutter/src/services/auth_services.dart';
 import 'package:almacen_app_flutter/src/widgets/widgets.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class RegisterScreen extends StatelessWidget {
   const RegisterScreen({Key? key}) : super(key: key);
@@ -9,6 +11,8 @@ class RegisterScreen extends StatelessWidget {
    final emailController = TextEditingController();
     final passwordController = TextEditingController();
     final nameController = TextEditingController();
+
+    final authService = Provider.of<AuthServices>(context);
 
     return Scaffold(
       
@@ -24,8 +28,6 @@ class RegisterScreen extends StatelessWidget {
               children: [
                 const SizedBox(height: 50,),
                 const Text('CONTROL DE INVENTARIO', style: TextStyle( fontSize: 25), textAlign: TextAlign.center,),
-
-                //TODO: Agregar imagen 
 
                 Container(
                   width: double.infinity,
@@ -60,8 +62,30 @@ class RegisterScreen extends StatelessWidget {
                 CustomButton(
                   color: Colors.blue,
                   titulo: 'Crear cuenta',
-                  onPressed: (){
-                    Navigator.restorablePushNamed(context, 'dashboard');
+                  onPressed: ()async{
+                    //Validar campos
+                    if( emailController.text.trim().length > 3 &&  nameController.text.trim().length > 3
+                     && passwordController.text.trim().length>3){
+                       //Haz la peticion
+                       final res = await authService.registerUser( nameController.text.trim(), emailController.text.trim(), passwordController.text.trim() );
+                       if( res ){
+                         await showDialog(context: context, builder: (context){
+                           return const AlertDialog(
+                             title: Text('Registrado'),
+                             content: Text('Espera a que tu usuario sea validado'),
+                           );
+                         });
+                          Navigator.restorablePushNamed(context, 'login');
+                       }else{
+                         showDialog(context: context, builder: (context){
+                           return const AlertDialog(
+                             title: Text('Error, habla con el admin'),
+                             content: Text('Por favor dirigite con el administrador para crear tu cuenta'),
+                           );
+                         });
+                       }
+                    }
+
                   },
                 ),
 

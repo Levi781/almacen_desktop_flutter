@@ -8,8 +8,13 @@ import 'package:http/http.dart' as http;
 
 class AuthServices extends ChangeNotifier{
   
+  List<Usuario> usuariosRoles = [];
   late  Usuario user;
   final _baseURL = baseURL+'auth';
+
+  AuthServices(){
+    getAllUsers();
+  }
 
   Future<bool> inicioDeSesion(String email, String passw)async{
     final res = await http.post(Uri.parse(_baseURL), 
@@ -25,6 +30,59 @@ class AuthServices extends ChangeNotifier{
       return true;
     }
     return false;
+  }
+
+  Future<bool> registerUser( String nombre, String email, String password  )async{
+
+    final res = await http.post(
+      Uri.parse(baseURL+'users'), 
+      body: jsonEncode({
+        "nombre": nombre,
+        "email": email,
+        "password": password,
+        "role": "USER_ROLE",
+        "username": DateTime.now().toString()
+        },
+      ),
+
+      headers: {'Content-Type':"application/json; charset=UTF-8"}
+    );
+
+    String response = '';
+    response = jsonDecode(res.body).toString();
+
+    if( response.contains('error')){
+      return false;
+    }
+    return true;
+  }
+
+
+  Future getAllUsers()async{
+    final users = await http.get(Uri.parse(baseURL+'users'));
+
+    final res = Usuarios.fromJson( users.body );
+    usuariosRoles = [ ...res.usuarios];
+    notifyListeners();
+  }
+
+  Future activateUser( Usuario userActive, bool estado )async{
+    final res = await http.put(
+      Uri.parse(baseURL+'users/${userActive.uid}'),
+      body: jsonEncode({
+        "estado": estado
+      }),
+      headers: {'Content-Type':"application/json; charset=UTF-8"}
+    );
+    print(res.body);
+    getAllUsers();
+  }
+
+  Future deleteUser( Usuario userDelete )async{
+    final res = await http.delete(Uri.parse(baseURL+'users/${userDelete.uid}'),
+    headers: { 'Content-Type': 'application/json; charset=UTF-8'});
+    print(res);
+    getAllUsers();
   }
 
 

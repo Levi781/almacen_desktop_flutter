@@ -2,6 +2,7 @@ import 'package:almacen_app_flutter/src/models/products.dart';
 import 'package:almacen_app_flutter/src/screens/screens.dart';
 import 'package:almacen_app_flutter/src/services/auth_services.dart';
 import 'package:almacen_app_flutter/src/services/products_services.dart';
+import 'package:almacen_app_flutter/src/services/services.dart';
 import 'package:almacen_app_flutter/src/widgets/widgets.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -30,7 +31,9 @@ class CardProduct extends StatelessWidget {
 
                     Container(
                       width: double.infinity,
-                      child: const Image(
+                      child: producto.img != null
+                      ? Image(image: NetworkImage('http://localhost:8081/api/uploads/productos/'+producto.id!),fit: BoxFit.contain)
+                      : const Image(
                         image: AssetImage('assets/uquifa2.jpg'),
                         fit: BoxFit.contain,
                       )                      
@@ -69,9 +72,11 @@ class CardProduct extends StatelessWidget {
               ),
               Text( producto.name , style: const TextStyle(fontWeight: FontWeight.bold), textAlign: TextAlign.center, maxLines: 1 ),
               Text( producto.serie ),
-              CustomButton(onPressed: (){
+              CustomButton(onPressed: ()async{
                  final productService = Provider.of<ProductsService>(context, listen:false);
-                 productService.currentProduct = producto;
+                 final usersServices = Provider.of<UsersServices>(context, listen: false );
+                 await usersServices.getAllUsersDataClients();
+                  productService.currentProduct = producto;
                   navegationModel.paginaActual = 4;
               }, 
               titulo: 'Ver producto', color: Colors.deepPurple)
